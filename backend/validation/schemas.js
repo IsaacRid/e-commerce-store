@@ -41,6 +41,19 @@ const createOrderSchema = Joi.object({
     paymentMethod: Joi.string().valid('card', 'paypal').required()
 });
 
+// Params
+const productIdParamSchema = Joi.object({
+    productId: Joi.string().length(24).hex().required()
+});
+
+const itemIdParamSchema = Joi.object({
+    itemId: Joi.string().length(24).hex().required()
+});
+
+const orderIdParamSchema = Joi.object({
+    orderId: Joi.string().length(24).hex().required()
+});
+
 module.exports = {
     // Auth
     registerSchema,
@@ -55,4 +68,9 @@ module.exports = {
 
     // Orders
     createOrderSchema
+
+    // Params
+    , productIdParamSchema,
+    itemIdParamSchema,
+    orderIdParamSchema
 };
