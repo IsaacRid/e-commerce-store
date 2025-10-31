@@ -1,11 +1,13 @@
 const products = require('../controllers/productController');
+const { protect } = require('../middleware/authMiddleware');
+const { admin } = require('../middleware/adminMiddleware');
 
 module.exports = (app) => {
     app.route('/api/products/')
         .get(products.get_products)
-        .post(products.create_product);
+        .post(protect, admin, products.create_product);
     app.route('/api/products/:productId')
         .get(products.get_product)
-        .put(products.update_product)
-        .delete(products.delete_product);
+        .put(protect, admin, products.update_product)
+        .delete(protect, admin, products.delete_product);
 }

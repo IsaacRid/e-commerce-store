@@ -1,13 +1,14 @@
 const cart = require('../controllers/cartController');
+const { protect } = require('../middleware/authMiddleware');
 
 module.exports = (app) => {
     app.route('/api/cart/')
-        .get(cart.get_cart)
+        .get(protect, cart.get_cart)
     app.route('/api/cart/add')
-        .post(cart.add_to_cart)
+        .post(protect, cart.add_to_cart)
     app.route('/api/cart/update/:itemId')
-        .put(cart.update_quantity)
-        .delete(cart.remove_from_cart)
+        .put(protect, cart.update_quantity)
+        .delete(protect, cart.remove_from_cart)
     app.route('/api/cart/clear')
-        .delete(cart.clear_cart)
+        .delete(protect, cart.clear_cart)
 }

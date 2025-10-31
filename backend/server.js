@@ -6,6 +6,10 @@ const morgan = require('morgan');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+require('dotenv').config();
+const connectDB = require('./config/db');
+connectDB();
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
