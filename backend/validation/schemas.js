@@ -34,6 +34,11 @@ const updateCartSchema = Joi.object({
     quantity: Joi.number().integer().min(1).required()
 });
 
+const cartItemParamSchema = Joi.object({
+    cartItemId: Joi.string().length(24).hex().required()
+});
+
+
 // Order Schemas
 
 const createOrderSchema = Joi.object({
@@ -44,10 +49,6 @@ const createOrderSchema = Joi.object({
 // Params
 const productIdParamSchema = Joi.object({
     productId: Joi.string().length(24).hex().required()
-});
-
-const itemIdParamSchema = Joi.object({
-    itemId: Joi.string().length(24).hex().required()
 });
 
 const orderIdParamSchema = Joi.object({
@@ -61,16 +62,14 @@ module.exports = {
 
     // Product
     createProductSchema,
+    productIdParamSchema,
 
     // Cart
     addToCartSchema,
     updateCartSchema,
+    cartItemParamSchema,
 
     // Orders
-    createOrderSchema
-
-    // Params
-    , productIdParamSchema,
-    itemIdParamSchema,
+    createOrderSchema,
     orderIdParamSchema
 };

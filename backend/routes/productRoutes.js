@@ -9,7 +9,7 @@ module.exports = (app) => {
         .get(products.get_products)
         .post(protect, admin, validate(createProductSchema), products.create_product);
     app.route('/api/products/:productId')
-        .get(validate(productIdParamSchema), products.get_product)
-        .put(protect, admin, validate(productIdParamSchema), products.update_product)
-        .delete(protect, admin, validate(productIdParamSchema), products.delete_product);
+        .get(validate(productIdParamSchema, 'params'), products.get_product)
+        .put(protect, admin, validate(productIdParamSchema, 'params'), products.update_product)
+        .delete(protect, admin, validate(productIdParamSchema, 'params'), products.delete_product);
 }

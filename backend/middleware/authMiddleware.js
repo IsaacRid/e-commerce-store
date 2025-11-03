@@ -12,7 +12,7 @@ const protect = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = await User.findById(decoded.id).select('-password'); // exclude password
+        req.user = await User.findById(decoded.id).select('-password');
         next();
     } catch (err) {
         return res.status(401).json({ message: 'Invalid token' });

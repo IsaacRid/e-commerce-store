@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,7 +11,7 @@ const connectDB = require('./config/db');
 connectDB();
 
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 app.use(morgan('tiny'));
 
 require('./routes/cartRoutes')(app);
