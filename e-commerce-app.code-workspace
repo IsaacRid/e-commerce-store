@@ -1,7 +1,12 @@
 {
 	"folders": [
 		{
+			"name": "e-commerce-app",
 			"path": "."
+		},
+		{
+			"name": "frontend",
+			"path": "../Todo-app/frontend"
 		}
 	]
 }
