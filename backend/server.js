@@ -13,6 +13,7 @@ connectDB();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
+app.use('/images', express.static('public/images'));
 
 require('./routes/cartRoutes')(app);
 require('./routes/productRoutes')(app);

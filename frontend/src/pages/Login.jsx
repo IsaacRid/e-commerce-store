@@ -13,15 +13,32 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/login', {
+            const response = await axios.post('/api/auth/login', {
                 email,
                 password,
             });
 
-            localStorage.setItem('token', response.data.token);
+            const { token, user } = response.data;
+
+            if (!token || !user) {
+                throw new Error('Invalid response from server');
+            }
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+
             navigate('/home');
         } catch (err) {
-            setError(err.response?.data?.error || 'Login failed');
+            console.error('Login error:', {
+                message: err.message,
+                response: err.response?.data,
+                status: err.response?.status
+            });
+
+            setError(
+                err.response?.data?.error ||
+                (err.response?.status === 400 ? 'Invalid email or password' : 'Login failed - please try again')
+            );
         }
     };
 

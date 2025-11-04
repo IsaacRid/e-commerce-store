@@ -53,7 +53,9 @@ const get_order_details = async (req, res) => {
 
 const get_all_orders = async (req, res) => {
     try {
-        const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
+        const orders = await Order.find({ user: req.user._id })
+            .populate('items.product')
+            .sort({ createdAt: -1 });
         res.status(200).json(orders);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -62,7 +64,10 @@ const get_all_orders = async (req, res) => {
 
 const admin_get_all_orders = async (req, res) => {
     try {
-        const orders = await Order.find().populate('user', 'name email').sort({ createdAt: -1 });
+        const orders = await Order.find()
+            .populate('user', 'name email')
+            .populate('items.product')
+            .sort({ createdAt: -1 });
         res.status(200).json(orders);
     } catch (err) {
         res.status(500).json({ error: err.message });

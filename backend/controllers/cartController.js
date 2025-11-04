@@ -78,7 +78,8 @@ const clear_cart = async (req, res) => {
 
         cart.items = [];
         await cart.save();
-        res.status(200).json(cart);
+        const populatedCart = await cart.populate('items.product');
+        res.status(200).json(populatedCart);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

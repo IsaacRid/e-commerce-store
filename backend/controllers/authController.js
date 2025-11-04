@@ -15,7 +15,15 @@ const create_user = async (req, res) => {
         const user = await User.create({ name, email, password: hashedPassword });
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email } });
+        res.status(201).json({
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                isAdmin: user.isAdmin
+            }
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -27,16 +35,26 @@ const login_user = async (req, res) => {
 
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ error: 'Invalid credentials' });
+            console.log('Login attempt: User not found:', email);
+            return res.status(400).json({ error: 'Invalid email or password' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ error: 'Invalid credentials' });
+            console.log('Login attempt: Invalid password for user:', email);
+            return res.status(400).json({ error: 'Invalid email or password' });
         }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(200).json({ token, user: { id: user._id, name: user.name, email: user.email } });
+        res.status(200).json({
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                isAdmin: user.isAdmin
+            }
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
