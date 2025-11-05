@@ -19,6 +19,7 @@ require('./routes/cartRoutes')(app);
 require('./routes/productRoutes')(app);
 require('./routes/orderRoutes')(app);
 require('./routes/authRoutes')(app);
+require('./routes/paymentRoutes')(app);
 
 app.get('/', (req, res) => {
     res.send('API is running...');

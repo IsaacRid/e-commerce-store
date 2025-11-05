@@ -42,8 +42,8 @@ const cartItemParamSchema = Joi.object({
 // Order Schemas
 
 const createOrderSchema = Joi.object({
-    shippingAddress: Joi.string().min(5).required(),
-    paymentMethod: Joi.string().valid('card', 'paypal').required()
+    shippingAddress: Joi.string().min(5),
+    paymentMethod: Joi.string().valid('card', 'paypal')
 });
 
 // Params

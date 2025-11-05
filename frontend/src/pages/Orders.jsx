@@ -43,14 +43,6 @@ export default function Orders() {
                             <li key={order._id} className="py-4">
                                 <div className="flex justify-between items-center mb-2">
                                     <span className="font-semibold text-gray-800">Order ID: {order._id}</span>
-                                    <span className={`px-2 py-1 rounded text-white ${order.status === "pending"
-                                        ? "bg-yellow-500"
-                                        : order.status === "completed"
-                                            ? "bg-green-500"
-                                            : "bg-gray-500"
-                                        }`}>
-                                        {order.status}
-                                    </span>
                                 </div>
 
                                 <ul className="mb-2">

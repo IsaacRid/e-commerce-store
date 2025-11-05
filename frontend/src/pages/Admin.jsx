@@ -11,6 +11,8 @@ export default function AdminDashboard() {
     const [showEditModal, setShowEditModal] = useState(false);
     const [editProduct, setEditProduct] = useState(null);
     const [editForm, setEditForm] = useState({ name: '', price: '', stock: '', image: '' });
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [createForm, setCreateForm] = useState({ name: '', price: '', stock: '', image: '' });
 
     const token = localStorage.getItem("token");
 
@@ -101,6 +103,37 @@ export default function AdminDashboard() {
         }
     };
 
+    const openCreateModal = () => {
+        setCreateForm({ name: '', price: '', stock: '', image: '' });
+        setShowCreateModal(true);
+    };
+    const closeCreateModal = () => {
+        setShowCreateModal(false);
+    };
+    const handleCreateFormChange = (e) => {
+        const { name, value } = e.target;
+        setCreateForm((prev) => ({ ...prev, [name]: value }));
+    };
+    const handleCreateProductSave = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axios.post(
+                "/api/products",
+                {
+                    name: createForm.name,
+                    price: Number(createForm.price),
+                    stock: Number(createForm.stock),
+                    image: createForm.image,
+                },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            setProducts((prev) => [...prev, res.data]);
+            closeCreateModal();
+        } catch (err) {
+            setError("Failed to create product");
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-100 p-6">
             <Navbar />
@@ -108,7 +141,15 @@ export default function AdminDashboard() {
             {error && <div className="text-red-600 text-center mb-4">{error}</div>}
 
             <div className="mb-10">
-                <h2 className="text-2xl font-semibold mb-4">Products</h2>
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-semibold">Products</h2>
+                    <button
+                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 font-semibold"
+                        onClick={openCreateModal}
+                    >
+                        Create Product
+                    </button>
+                </div>
                 {loadingProducts ? (
                     <p>Loading products...</p>
                 ) : products.length === 0 ? (
@@ -132,7 +173,6 @@ export default function AdminDashboard() {
                                     >
                                         Edit
                                     </button>
-
                                     {showEditModal && (
                                         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                                             <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
@@ -216,6 +256,79 @@ export default function AdminDashboard() {
                         ))}
                     </ul>
                 )}
+
+                {showCreateModal && (
+                    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+                            <button
+                                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl"
+                                onClick={closeCreateModal}
+                                aria-label="Close"
+                            >
+                                &times;
+                            </button>
+                            <h2 className="text-xl font-semibold mb-4">Create Product</h2>
+                            <form onSubmit={handleCreateProductSave} className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-700 mb-1">Name</label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={createForm.name}
+                                        onChange={handleCreateFormChange}
+                                        className="w-full border rounded px-3 py-2"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-700 mb-1">Price (£)</label>
+                                    <input
+                                        type="number"
+                                        name="price"
+                                        value={createForm.price}
+                                        onChange={handleCreateFormChange}
+                                        className="w-full border rounded px-3 py-2"
+                                        min="0"
+                                        step="0.01"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-700 mb-1">Stock</label>
+                                    <input
+                                        type="number"
+                                        name="stock"
+                                        value={createForm.stock}
+                                        onChange={handleCreateFormChange}
+                                        className="w-full border rounded px-3 py-2"
+                                        min="0"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-700 mb-1">Image Filename</label>
+                                    <input
+                                        type="text"
+                                        name="image"
+                                        value={createForm.image}
+                                        onChange={handleCreateFormChange}
+                                        className="w-full border rounded px-3 py-2"
+                                        placeholder="e.g. product.jpg"
+                                    />
+                                    <div className="mt-2">
+                                        <span className="text-xs text-gray-500">Image must exist in backend public/images folder.</span>
+                                    </div>
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 font-semibold"
+                                >
+                                    Create Product
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </div>
 
             <div>
@@ -230,16 +343,6 @@ export default function AdminDashboard() {
                             <li key={order._id} className="py-4">
                                 <div className="flex justify-between items-center mb-2">
                                     <span className="font-semibold">Order ID: {order._id}</span>
-                                    <span
-                                        className={`px-2 py-1 rounded text-white ${order.status === "pending"
-                                            ? "bg-yellow-500"
-                                            : order.status === "completed"
-                                                ? "bg-green-500"
-                                                : "bg-gray-500"
-                                            }`}
-                                    >
-                                        {order.status}
-                                    </span>
                                 </div>
                                 <ul className="mb-2">
                                     {order.items.map((item) => (

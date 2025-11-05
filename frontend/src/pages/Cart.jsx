@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
     const [cart, setCart] = useState(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
 
@@ -60,20 +62,6 @@ export default function Cart() {
             setCart({ items: [] });
         } catch (err) {
             setError("Failed to clear cart");
-        }
-    };
-
-    const handlePlaceOrder = async () => {
-        try {
-            await axios.post(
-                "/api/orders",
-                { shippingAddress: "123 Example St", paymentMethod: "card" },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            alert("Order placed successfully!");
-            setCart({ items: [] });
-        } catch (err) {
-            setError("Failed to place order");
         }
     };
 
@@ -150,7 +138,7 @@ export default function Cart() {
                                 Clear Cart
                             </button>
                             <button
-                                onClick={handlePlaceOrder}
+                                onClick={() => navigate('/checkout')}
                                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                             >
                                 Place Order

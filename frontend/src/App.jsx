@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Cart from './pages/Cart';
 import Orders from './pages/Orders';
 import Admin from './pages/Admin';
+import StripeCheckout from './pages/StripeCheckout';
 import axios from 'axios';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       <Route path="/cart" element={<Cart />} />
       <Route path="/orders" element={<Orders />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/checkout" element={<StripeCheckout />} />
     </Routes>
   );
 }
